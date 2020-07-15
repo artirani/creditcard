@@ -16,7 +16,9 @@ class MyInput extends React.Component {
   vc4 = React.createRef();
 
   onChange = (e, index) => {
-    this.setState({[e.target.name]: e.target.value, currentRefIndex: index});
+    if (Number.isInteger(Number(e.target.value))) {
+      this.setState({[e.target.name]: e.target.value, currentRefIndex: index});
+    }
   };
 
   componentDidUpdate() {
@@ -34,6 +36,42 @@ class MyInput extends React.Component {
       refs[currentRefIndex - 1].current.focus();
 
 
+    }
+  }
+
+
+  handleKeyDown = (event) => {
+    // Handle the delete/backspace key
+    if (event.keyCode === 8 || event.keyCode === 46) {
+      this.setState({
+        value: ''
+      });
+
+      return;
+    }
+
+    // Handle the tab key
+    if (event.keyCode === 9) {
+      return;
+    }
+
+    // Handle numbers and characters
+    const key = String.fromCharCode(event.which);
+    if (Number.isInteger(Number(key))) {
+      this.setState({
+        value: key
+      }, () => {
+        // Move focus to next input
+        this.refs[(this.props.index + 1) % 6].focus()
+      });
+    }
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    if (nextProps.value !== this.state.inputValue) {
+      this.setState({
+        inputValue: nextProps.inputValue
+      })
     }
   }
 
@@ -55,7 +93,7 @@ class MyInput extends React.Component {
                  onChange={e => this.onChange(e, 2)}/>
         </div>
         <div className="inl wid">
-          <input className="inpwid" maxLength={4} ref={this.vc4} name="v4" value={this.state.v4}
+          <input className="inpwid" maxLength={4} ref={this.vc4} name="v4" value={this.state.v4} selectTextOnFocus={true}
                  onChange={e => this.onChange(e, 3)}/>
         </div>
       </div>

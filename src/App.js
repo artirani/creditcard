@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css';
 import CreditCard from './components/CreditCard'
-//import Header from './components/Header'
 
 
 
@@ -12,7 +11,6 @@ class App extends React.Component
   
   return(
   <div>
-      {/* <Header/> */}
       <CreditCard/>
   </div>
    
